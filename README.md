@@ -7,7 +7,30 @@ Christopher Kang (cskang2)
 
 Final Project Update 3
 
-Update here
+This code is designed for a UR3 robot to be able to stack three cups in V-rep simulation using the BaxterVaccumCup. 
+We will be using the default values for vel, accel, jerk, currentvelocity and current acceleration. Joints of the robot uses radians as an input, thus d2r variable was created in order to make the conversion. We use the default maxvel, maxaccel,  maxjerk, and target velocity values.
+The steps to stack three cups are as follow: 
+    1) Set the starting position. 
+    2) Move to the starting position. 
+    3) Set the position on top of the first cup in such a way that the gripper is touching the cup. This is to ensure that the gripper can pick up the cup. 
+    4) Move to the new location. 
+    5) Turn the suction on
+    6) Set a new position. This is the position where you want to drop the first cup.
+    7) Move to the new position. 
+    8) Turn the suction off.  
+    9) Set the position on top of the second cup in such a way that the gripper is touching the cup. This is to ensure that the gripper can pick up the cup. 
+    10) Move to the new location. 
+    11) Turn the suction on
+    12) Set a new position. This position is right next to the first cup in such a way that the rim of the two cups are touching.
+    13) Move to the new position. 
+    14) Turn the suction off. 
+    15) Set the position on top of the third cup in such a way that the gripper is touching the cup. This is to ensure that the gripper can pick up the cup. 
+    16) Move to the new location. 
+    17) Turn the suction on
+    18) Set a new position. This position is centered on top of the first two cups' location. This is to allow for the stacking of the third cup on top of the first two cups. 
+    19) Move to the new position. 
+    20) Turn the suction off.
+    21) Set and move to the end location. This is just out of the way of our tower of cup formation. 
 
 
 Final Project Update 2
