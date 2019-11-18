@@ -5,6 +5,25 @@ Anthony Chemaly (chemaly2)
 Christopher Kang (cskang2)
 
 
+Final Project Update 4
+
+This code is designed for a UR3 robot to be able to stack upto 9 cups in V-rep simulation using the BaxterVaccumCup. The robot now creates a Pyramid structured stack instead of a 2D triangular stack.
+We will be using the default values for vel, accel, jerk, currentvelocity and current acceleration. Joints of the robot uses radians as an input, thus d2r variable was created in order to make the conversion. We use the default maxvel, maxaccel,  maxjerk, and target velocity values. We have defined a new variable named number to assign the number of cups that the robot needs to stack. Based on the value of the number variable, the programs picks the if case that is relevant to the problem.  
+Each case contains the steps to stack the assigned number of cups as follows: 
+    1) Set the starting position. 
+    2) Move to the starting position. 
+    3) Set the position on top of the cup (that needs to be stacked) in such a way that the gripper is touching the cup. This is to ensure that the gripper can pick up the cup. 
+    4) Move to the new location. 
+    5) Turn the suction on.
+    6) Set a new position. This is the position where you want to place the cup.
+    7) Move to the new position. 
+    8) Turn the suction off.
+    Now repeat steps 3-8 for all of the remaining cups that needs to be stacked. Updates the positions in step 3 and 6 to reflect the new locations of the cups.
+    9) Assign the base position.
+    10) Move to the base position.
+    
+
+
 Final Project Update 3
 
 This code is designed for a UR3 robot to be able to stack three cups in V-rep simulation using the BaxterVaccumCup. 
@@ -48,8 +67,3 @@ The steps to picking up and moving the object are as follows:
     6) Set a new position. This is the position where you want to drop the block.
     7) Move to the new position. 
     8) Turn the suction off. 
-    
-    
-    
-    
-    
