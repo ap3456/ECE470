@@ -18,7 +18,7 @@ Each case contains the steps to stack the assigned number of cups as follows:
     6) Set a new position. This is the position where you want to place the cup.
     7) Move to the new position. 
     8) Turn the suction off.
-    Now repeat steps 3-8 for all of the remaining cups that needs to be stacked. Updates the positions in step 3 and 6 to reflect the new locations of the cups.
+    Now repeat steps 3-8 for all of the remaining cups that needs to be stacked. Update the positions in step 3 and 6 to reflect the new locations of the cup.
     9) Assign the base position.
     10) Move to the base position.
     
