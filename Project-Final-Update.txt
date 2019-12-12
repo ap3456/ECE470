@@ -1,0 +1,999 @@
+
+function sysCall_threadmain()
+    jointHandles={-1,-1,-1,-1,-1,-1}
+    for i=1,6,1 do
+        jointHandles[i]=sim.getObjectHandle('UR3_joint'..i)
+    end
+    proxy = sim.getObjectHandle('Proximity_sensor')
+    -- Set-up some of the RML vectors:
+    vel=180                 --set velocity
+    accel=40                --set acceleration
+    jerk=80                 --set jerk
+    currentVel={0,0,0,0,0,0,0}      --starting vel and accel
+    currentAccel={0,0,0,0,0,0,0}
+    d2r = math.pi/180               --constant for degree to radians
+    maxVel={vel*math.pi/180,vel*math.pi/180,vel*math.pi/180,vel*math.pi/180,vel*math.pi/180,vel*math.pi/180}
+    maxAccel={accel*math.pi/180,accel*math.pi/180,accel*math.pi/180,accel*math.pi/180,accel*math.pi/180,accel*math.pi/180}
+    maxJerk={jerk*math.pi/180,jerk*math.pi/180,jerk*math.pi/180,jerk*math.pi/180,jerk*math.pi/180,jerk*math.pi/180}
+    targetVel={0,0,0,0,0,0}
+    number = 6
+    --This section goes position, move, succ, move, unsucc
+    --result, dis, point = sim.readProximitySensor(proxy)
+    if number < 1 then
+        targetPosE10={d2r*0,d2r*(45),d2r*0,d2r*(0),d2r*(270),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE10,targetVel)
+        targetPosE11={d2r*180,d2r*(45),d2r*0,d2r*(0),d2r*(270),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE11,targetVel)
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE10,targetVel)
+    end
+    if number > 10 then
+        targetPosE20={d2r*240,d2r*(0),d2r*127,d2r*(-40),d2r*(270),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE20,targetVel)
+        sim.setIntegerSignal('BaxterVacuumCup_active',1)
+        targetPosE21={d2r*270,d2r*(95),d2r*0,d2r*(-90),d2r*(270),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE21,targetVel)
+        targetPosE22={d2r*90,d2r*(95),d2r*0,d2r*(-90),d2r*(270),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPosE22,targetVel)
+        sim.setIntegerSignal('BaxterVacuumCup_active',0)
+    end
+    --Check if cup is held
+    targetPoscheck={d2r*140,d2r*(45),d2r*60,d2r*(-45),d2r*(270),0}
+    --Positions for stacking
+    targetPos10={d2r*140,d2r*(0),d2r*90,d2r*(0),d2r*(270),0}
+    targetPos11={d2r*155,d2r*(40),d2r*70,d2r*(-25),d2r*(270),0}
+    targetPos12={d2r*50,d2r*(50),d2r*20,d2r*(-10),d2r*(270),0}
+    targetPos13={d2r*50,d2r*(50),d2r*50,d2r*(-10),d2r*(270),0}
+    --End Cup 1
+    targetPos1={d2r*140,d2r*(0),d2r*90,d2r*(0),d2r*(270),0}
+    --Start Cup 2
+    targetPos20={d2r*170,d2r*(40),d2r*70,d2r*(-25),d2r*(270),0}
+    targetPos21={d2r*59,d2r*(50),d2r*20,d2r*(-10),d2r*(270),0}
+    targetPos22={d2r*59,d2r*(50),d2r*50,d2r*(-10),d2r*(270),0}
+    --End Cup 2
+    --Start Cup 3
+    targetPos30={d2r*185,d2r*(50),d2r*50,d2r*(-10),d2r*(270),0}
+    targetPos31={d2r*70,d2r*(55),d2r*25,d2r*(-10),d2r*(270),0}
+    targetPos32={d2r*70,d2r*(55),d2r*40,d2r*(-10),d2r*(270),0}
+    targetPos1={d2r*140,d2r*(0),d2r*90,d2r*(0),d2r*(270),0}
+    --End Cup 3
+    --Start Cup 4
+    targetPos40={d2r*200,d2r*(65),d2r*23,d2r*(0),d2r*(270),0}
+    targetPos41={d2r*55,d2r*(20),d2r*80,d2r*(-10),d2r*(270),0}
+    targetPos42={d2r*55,d2r*(30),d2r*80,d2r*(-20),d2r*(270),0}
+    --End Cup 4
+    --Start Cup 5
+    targetPos50={d2r*162,d2r*(14),d2r*107,d2r*(-27),d2r*(270),0}
+    targetPos51={d2r*64,d2r*(20),d2r*80,d2r*(-10),d2r*(270),0}
+    targetPos52={d2r*64,d2r*(35),d2r*74,d2r*(-20),d2r*(270),0}
+    --End Cup 5
+    --Start Cup 6
+    targetPos60={d2r*185,d2r*(15),d2r*107,d2r*(-29),d2r*(270),0}
+    targetPos61={d2r*58,d2r*(0),d2r*90,d2r*(0),d2r*(270),0}
+    targetPos62={d2r*58,d2r*(8),d2r*110,d2r*(-30),d2r*(270),0}
+    --End Cup 6
+    --Start Cup 7
+    targetPos70={d2r*205,d2r*(29),d2r*90,d2r*(-30),d2r*(270),0}
+    targetPos71={d2r*53,d2r*(50),d2r*20,d2r*(-90),d2r*(270),0}
+    targetPos72={d2r*53,d2r*(40),d2r*35,d2r*(15),d2r*(270),0}
+    --End Cup 7
+    --Start Cup 8
+    targetPos80={d2r*192,d2r*(-17),d2r*139,d2r*(-30),d2r*(270),0}
+    targetPos81={d2r*58,d2r*(10),d2r*70,d2r*(10),d2r*(270),0}
+    targetPos82={d2r*58,d2r*(20),d2r*60,d2r*(10),d2r*(270),0}
+    --End Cup 8
+    --Start Cup 9
+    targetPos90={d2r*217,d2r*(13),d2r*110,d2r*(-30),d2r*(270),0}
+    targetPos91={d2r*65,d2r*(50),d2r*20,d2r*(-90),d2r*(270),0}
+    targetPos92={d2r*65,d2r*(43),d2r*30,d2r*(10),d2r*(270),0}
+    --End Cup 9
+    --Start Cup 10
+    targetPos101={d2r*240,d2r*(0),d2r*127,d2r*(-40),d2r*(270),0}
+    targetPos102={d2r*58,d2r*(20),d2r*0,d2r*(0),d2r*(270),0}
+    targetPos103={d2r*58,d2r*(35),d2r*10,d2r*(25),d2r*(270),0}
+    --End Cup 10
+    if number == 1 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sense = 0
+        end
+    end
+    if number == 2 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sense = 0
+        end
+    end
+    if number == 3 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sense = 0
+        end
+    end
+    if number == 4 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sense = 0
+        end
+    end
+    if number == 5 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sense = 0
+        end
+    end
+    if number == 6 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos60,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos61,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos62,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 6
+            sense = 0
+        end
+    end
+    if number == 7 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos60,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos61,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos62,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos70,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos71,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos72,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 7
+            sense = 0
+        end
+    end
+    if number ==8 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos60,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos61,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos62,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos70,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos71,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos72,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 8
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos80,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos81,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos82,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 8
+            sense = 0
+        end
+    end
+    if number == 9 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos60,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos61,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos62,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos70,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos71,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos72,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 8
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos80,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos81,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos82,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 8
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel) 
+            --Start Cup 9
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos90,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos91,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos92,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 9
+            sense = 0
+        end
+    end
+    if number == 10 then
+        sense = 1
+        while(sense == 1)
+        do
+            --Start Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos10,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos11,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos12,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos13,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 1
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos20,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos21,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos22,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 2
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos30,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos31,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos32,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --End Cup 3
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos40,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos41,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos42,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 4
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos50,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos51,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos52,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 5
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos60,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos61,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos62,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 6
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos70,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos71,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos72,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 7
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 8
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos80,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos81,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos82,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 8
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel) 
+            --Start Cup 9
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos90,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos91,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos92,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 9
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos1,targetVel)
+            --Start Cup 10
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos101,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',1)
+            --Check proxy
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPoscheck,targetVel)
+            result, dis, point = sim.readProximitySensor(proxy)
+            if result == 0 then
+                break
+            end
+            --End check
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos102,targetVel)
+            sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,targetPos103,targetVel)
+            sim.setIntegerSignal('BaxterVacuumCup_active',0)
+            --End Cup 10
+            sense = 0
+        end
+    end
+        base={d2r*0,d2r*(0),d2r*0,d2r*(0),d2r*(0),0}
+        sim.rmlMoveToJointPositions(jointHandles,-1,currentVel,currentAccel,maxVel,maxAccel,maxJerk,base,targetVel)
+end
